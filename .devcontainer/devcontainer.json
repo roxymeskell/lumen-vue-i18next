@@ -11,7 +11,7 @@
 	},
 	// && php -S 0.0.0.0:8080 public/index.php
     // && npm run dev
-	"postCreateCommand": "bash -c \" cd lumen-backend && composer install && php artisan migrate:fresh && cd ..; cd vue-frontend && npm install\"",
+	"postCreateCommand": "bash -c \" cd api && composer install && php artisan migrate:fresh && cd ..; cd frontend && npm install\"",
 
 	"customizations": {
 		"vscode": {

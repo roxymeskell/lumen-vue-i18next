@@ -4,7 +4,7 @@ services:
   lumen:
     image: lumen-backend
     build:
-      context: ./lumen-backend/
+      context: ./api/
       dockerfile: ../docker-images/lumen-backend/Dockerfile
     depends_on:
       - mariadb
@@ -26,7 +26,7 @@ services:
   vue:
     image: vue-frontend
     build: 
-      context: ./vue-frontend/
+      context: ./frontend/
       dockerfile: ../docker-images/vue-frontend/Dockerfile
       args:
         VITE_API_BASE_URL: 'http://${LUMEN_HOST:-localhost}:${LUMEN_PORT:-8080}'
