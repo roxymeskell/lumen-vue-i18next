@@ -14,13 +14,16 @@ ARG USE_MOBY="false"
 ARG USERNAME=automatic
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
-RUN curl -o- https://raw.githubusercontent.com/microsoft/vscode-dev-containers/main/script-library/docker-debian.sh | bash - "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}"
+# RUN curl -o- https://raw.githubusercontent.com/microsoft/vscode-dev-containers/main/script-library/docker-debian.sh | bash - "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}"
+RUN curl -o- https://raw.githubusercontent.com/microsoft/vscode-dev-containers/main/script-library/docker-debian.sh | bash -s -- "${ENABLE_NONROOT_DOCKER}" "/var/run/docker-host.sock" "/var/run/docker.sock" "${USERNAME}"
 
-ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-CMD [ "sleep", "infinity" ]
+# ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
+# CMD [ "sleep", "infinity" ]
 
 
-# # https://github.com/microsoft/vscode-dev-containers/blob/main/containers/docker-from-docker-compose/.devcontainer/Dockerfile
+
+
+# https://github.com/microsoft/vscode-dev-containers/blob/main/containers/docker-from-docker-compose/.devcontainer/Dockerfile
 # COPY .devcontainer/*.sh /tmp/library-scripts/
 # RUN apt-get update \
 #     # && /bin/bash /tmp/library-scripts/common-debian.sh "${INSTALL_ZSH}" "${USERNAME}" "${USER_UID}" "${USER_GID}" "${UPGRADE_PACKAGES}" "true" "true" \
@@ -58,7 +61,7 @@ CMD [ "sleep", "infinity" ]
 
 # # Setting the ENTRYPOINT to docker-init.sh will configure non-root access 
 # # to the Docker socket. The script will also execute CMD as needed.
-# ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
-# CMD [ "sleep", "infinity" ]
+ENTRYPOINT [ "/usr/local/share/docker-init.sh" ]
+CMD [ "sleep", "infinity" ]
 
 # # CMD /bin/sh -c "while sleep 1000; do :; done"
