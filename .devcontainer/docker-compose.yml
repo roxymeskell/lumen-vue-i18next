@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  dev:
+    build:
+      context: ../
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ../:/workspace:cached
+      # Forwards the local Docker socket to the container.
+      - //var/run/docker.sock:/var/run/docker-host.sock 
+    tty: true
+    environment:
+        APP_ENV: local
+        DB_CONNECTION: mysql
+        DB_HOST: db
+        DB_PORT: 3306
+        DB_DATABASE: dev
+        DB_USERNAME: root
+        DB_PASSWORD:
+        VITE_API_BASE_URL: 'http://localhost:8080'
+  db:
+    image: "mariadb:latest"
+    ports:
+       - '3306:3306'
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 1
+      MARIADB_DATABASE: dev

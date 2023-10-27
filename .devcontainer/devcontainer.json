@@ -1,0 +1,44 @@
+{
+	"name": "Lumen Vue i18next",
+	"dockerComposeFile": "./docker-compose.yml",
+  	"service": "dev",
+	"workspaceFolder": "/workspace",
+	"forwardPorts": [ 5173, 8080, "db:3306" ],
+	"portsAttributes": {
+		"5173": {"label": "Vite port"},
+		"8080": {"label": "Lumen API port"},
+		"mariadb:3306": {"label": "MariaDB port"}
+	},
+	// && php -S 0.0.0.0:8080 public/index.php
+    // && npm run dev
+	"postCreateCommand": "bash -c \" cd lumen-backend && composer install && php artisan migrate:fresh && cd ..; cd vue-frontend && npm install\"",
+
+	"customizations": {
+		"vscode": {
+            "settings": {
+                "php.format.codeStyle": "PSR-2"
+            },
+			"extensions": [
+				"DEVSENSE.phptools-vscode",
+				"ryannaddy.laravel-artisan",
+				"EditorConfig.EditorConfig",
+				"mikestead.dotenv",
+				"eamodio.gitlens",
+				"Vue.volar",
+				"dbaeumer.vscode-eslint",
+				"Vue.vscode-typescript-vue-plugin",
+				"ms-azuretools.vscode-docker"
+			]
+		},
+		"codespaces": {
+			"repositories": {
+				"roxymeskell/awp-lumen-backend": {
+					"permissions": "write-all"
+				},
+				"roxymeskell/awp-vue-frontend": {
+					"permissions": "write-all"
+				}
+			}
+		}
+	}
+}
