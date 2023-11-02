@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   # BACKEND
-  lumen:
+  lumen-backend:
     image: lumen-backend
     build:
       context: ./api/
@@ -17,13 +17,15 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: mariadb
       DB_PORT: 3306
-      DB_DATABASE: '${LUMEN_DB_DATABASE:-awp_employee_happiness}'
+      DB_DATABASE: '${LUMEN_DB_DATABASE:-mydb}'
       DB_USERNAME: '${LUMEN_DB_USERNAME:-user}'
       DB_PASSWORD: '${LUMEN_DB_PASSWORD:-password}'
     command: php -S 0.0.0.0:8080 public/index.php
+    networks:
+      - mynetwork
 
   # FRONTEND
-  vue:
+  vue-frontend:
     image: vue-frontend
     build: 
       context: ./frontend/
@@ -33,20 +35,43 @@ services:
     ports:
       - '${APP_PORT:-3000}:80'
     command: nginx -g "daemon off;"
+    networks:
+      - mynetwork
 
   # DATABASE
   mariadb:
     image: "mariadb:latest"
     volumes:
-     - awp_db_data:/var/lib/mysql
+     - db_data:/var/lib/mysql
      - ./lumen-backend/database/schema/:/docker-entrypoint-initdb.d/:ro
     ports:
        - '${FORWARD_DB_PORT:-3306}:3306'
     environment:
       MARIADB_RANDOM_ROOT_PASSWORD: 1
-      MARIADB_DATABASE: '${LUMEN_DB_DATABASE:-awp_employee_happiness}'
+      MARIADB_DATABASE: '${LUMEN_DB_DATABASE:-mydb}'
       MARIADB_USER: '${LUMEN_DB_USERNAME:-user}'
       MARIADB_PASSWORD: '${LUMEN_DB_PASSWORD:-password}'
+    networks:
+      - mynetwork
+
+  # PROXY
+  proxy:
+    build:
+      context: ./docker-images/proxy
+    image: proxy
+    restart: unless-stopped
+    container_name: proxy
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - ${APP_PORT}:80
+      - ${APP_PORT_SSL}:443
+    networks:
+      - mynetwork
 
 volumes:
-  awp_db_data:
+  db_data:
+
+networks:
+  mynetwork:
+    name: mynetwork
