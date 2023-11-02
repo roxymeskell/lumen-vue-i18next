@@ -16,3 +16,5 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get('i18n/{key}', 'I18nController@get');
