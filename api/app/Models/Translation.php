@@ -12,6 +12,7 @@ class Translation extends Model
 {
     use SoftDeletes;
 
+    public $table = 'translation';
     public $timestamps = true;
     protected $fillable = [
         'content',

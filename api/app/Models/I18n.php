@@ -11,13 +11,14 @@ class I18n extends Model
 {
     use SoftDeletes;
 
+    public $table = 'i18n';
     public $timestamps = true;
     protected $fillable = [
         'key',
     ];
 
     // One-to-Many relationship with translation
-    public function translation(): HasMany
+    public function translations(): HasMany
     {
         return $this->hasMany(Translation::class);
     }

@@ -11,6 +11,7 @@ class Locale extends Model
 {
     use SoftDeletes;
 
+    public $table = 'locale';
     public $timestamps = true;
     protected $fillable = [
         'key',

@@ -27,11 +27,16 @@ return new class extends Migration
 
         Schema::create('translation', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('i18n_id')->references('id')->on('i18n');
+            $table->unsignedBigInteger('locale_id')->references('id')->on('locale');
             $table->foreign('i18n_id')->references('id')->on('i18n');
             $table->foreign('locale_id')->references('id')->on('locale');
+
             $table->string('content');
             $table->timestamps();
             $table->softDeletes();
+
             // $table->primary(['i18n_id', 'locale_id']); // Add composite key
             $table->index(['i18n_id', 'locale_id']);
         });

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Database\Seeders\TranslationSeeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call('UsersTableSeeder');
+        $this->call(TranslationSeeder::class);
     }
 }
