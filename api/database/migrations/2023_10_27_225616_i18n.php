@@ -40,6 +40,14 @@ return new class extends Migration
             // $table->primary(['i18n_id', 'locale_id']); // Add composite key
             $table->index(['i18n_id', 'locale_id']);
         });
+
+        Schema::create('article', function (Blueprint $table) {
+            $table->id();
+            $table->string('title_i18n_key')->references('key')->on('i18n');
+            $table->string('content_i18n_key')->references('key')->on('i18n');
+            $table->timestamps();
+            $table->softDeletes();
+        });
     }
 
     /**
@@ -47,6 +55,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('article');
+
         Schema::dropIfExists('i18n');
         Schema::dropIfExists('locale');
         Schema::dropIfExists('translation');
