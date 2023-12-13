@@ -96,7 +96,7 @@ trait HasI18n
         if ($this->isI18nAttribute($key)) {
             // if (is_null( $i18n = $this->{$key . 'I18n'} ))
             //     $i18n = new I18n([ 'key' => $value ]);
-            $i18n = i18n::firstOrCreate(['key' => $this->transformToI18nKey($key)], []);
+            $i18n = i18n::firstOrCreate(['key' => $this->{$this->transformToI18nKey($key)} ?: $value ], []);
             $locale = Locale::firstOrCreate(['key' => $this->getLocale()]);
             $i18n->save();
             $locale->save();
@@ -108,7 +108,36 @@ trait HasI18n
             $this->{$this->transformToI18nKey($key)} = $i18n->key;
         }
 
-        parent::setAttribute($key, $value);
+        return parent::setAttribute($key, $value);
+    }
+
+    public function hasSetMutator($key)
+    {
+        if ($this->isI18nAttribute($key))
+            return true;
+
+        return parent::hasSetMutator($key);
+    }
+
+    protected function setMutatedAttributeValue($key, $value)
+    {
+        if ($this->isI18nAttribute($key)) {
+            // if (is_null( $i18n = $this->{$key . 'I18n'} ))
+            //     $i18n = new I18n([ 'key' => $value ]);
+            $i18n = i18n::firstOrCreate(['key' => $this->{$this->transformToI18nKey($key)} ?: $value ], []);
+            $locale = Locale::firstOrCreate(['key' => $this->getLocale()]);
+            $i18n->save();
+            $locale->save();
+            $translation = Translation::whereBelongsTo($i18n)->whereBelongsTo($locale)->firstOrNew([], [ 'i18n_id' => $i18n->id, 'locale_id' => $locale->id ]);
+            $translation->i18n_id = $i18n->id;
+            $translation->locale_id = $locale->id;
+            $translation->content = $value;
+            $translation->save();
+            $this->{$this->transformToI18nKey($key)} = $i18n->key;
+            return;
+        }
+
+        return parent::setMutatedAttributeValue($key, $value);
     }
 
 

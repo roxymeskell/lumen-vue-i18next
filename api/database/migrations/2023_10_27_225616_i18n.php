@@ -38,6 +38,7 @@ return new class extends Migration
             $table->softDeletes();
 
             // $table->primary(['i18n_id', 'locale_id']); // Add composite key
+            $table->unique(['i18n_id', 'locale_id']);
             $table->index(['i18n_id', 'locale_id']);
         });
 
